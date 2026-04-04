@@ -1,22 +1,24 @@
-import { StyleSheet, Text, View } from "react-native"
+import { Image, StyleSheet, Text, View } from "react-native"
 
 export const Card = ({children}: React.PropsWithChildren) => {
 
 
     return (
         <View style={style.card}>
-            <Text style={style.title}>Paracetamol 750mg</Text>
+            <View >
+                <Text style={style.title}>Paracetamol 750mg</Text>
 
-            <Text style={style.subtitle}>UBS Asa SUL - Farmácia</Text>
+                <Text style={style.subtitle}>UBS Asa SUL - Farmácia</Text>
 
-            <View style={style.infoContainer}>
-                <Text style={style.label}>
-                    Status: <Text style={style.statusInStock}>Em estoque</Text>
-                </Text>
+                <View style={style.infoContainer}>
+                    <Text style={style.label}>
+                        Status: <Text style={style.statusInStock}>Em estoque</Text>
+                    </Text>
 
-                <Text style={style.label}>
-                    Endereço: <Text style={style.address}>EQS 415/416</Text>
-                </Text>
+                    <Text style={style.label}>
+                        Endereço: <Text style={style.address}>EQS 415/416</Text>
+                    </Text>
+                </View>
             </View>
         </View>
     );
@@ -28,6 +30,7 @@ const style = StyleSheet.create({
         borderRadius: 12,
         padding: 16,
         margin:10,
+        flexDirection: 'row',
 
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -37,6 +40,10 @@ const style = StyleSheet.create({
         elevation: 3,
         borderWidth: 1,
         borderColor: '#E1E8F0',
+    },
+    cardImg:{
+        height: 120,
+        paddingLeft: 30
     },
     title: {
         fontSize: 22,

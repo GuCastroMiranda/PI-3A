@@ -1,12 +1,17 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 import { Card } from '@/components/Card';
-import { Input } from '@/components/Input';
+import { Input } from '@/components/ui/Input';
 import { Menu } from '@/components/Menu';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Login from '@/app/(auth)/login'
 
 export default function HomeScreen() {
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.containertitle}>
         <Text style={styles.title}>Olá, Guilherme!</Text>
         <Text style={styles.subTitle}>Brasília, DF</Text>
@@ -19,14 +24,12 @@ export default function HomeScreen() {
       <Card></Card>
       <Card></Card>
     
-      <Menu></Menu>
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container:{
-    flex:1,
     backgroundColor: "#D3E4FE",
   },
   containertitle:{
