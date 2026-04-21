@@ -1,22 +1,36 @@
 import { Image, StyleSheet, Text, View } from "react-native"
 
-export const Card = ({children}: React.PropsWithChildren) => {
+interface PaiProps{
+    title: string;
+    nameFarmacia: string;
+    status: boolean;
+    endereco: string;
+}
 
+export default function Card ({ title, nameFarmacia, status, endereco}: PaiProps) {
+
+    let typeStatus = 'Em estoque';
+    let styleStatus = style.statusInStock;
+
+    if(!status){
+        typeStatus = 'Esgotado'
+        styleStatus = style.statusRed;
+    }   
 
     return (
         <View style={style.card}>
             <View >
-                <Text style={style.title}>Paracetamol 750mg</Text>
+                <Text style={style.title}>{title}</Text>
 
-                <Text style={style.subtitle}>UBS Asa SUL - Farmácia</Text>
+                <Text style={style.subtitle}>{nameFarmacia}</Text>
 
                 <View style={style.infoContainer}>
                     <Text style={style.label}>
-                        Status: <Text style={style.statusInStock}>Em estoque</Text>
+                        Status: <Text style={ styleStatus }>{ typeStatus }</Text>
                     </Text>
 
                     <Text style={style.label}>
-                        Endereço: <Text style={style.address}>EQS 415/416</Text>
+                        Endereço: <Text style={style.address}>{ endereco }</Text>
                     </Text>
                 </View>
             </View>
@@ -66,6 +80,10 @@ const style = StyleSheet.create({
     },
     statusInStock: {
         color: '#32D74B',
+        fontWeight: '400',
+    },
+    statusRed:{
+        color: '#ff0000',
         fontWeight: '400',
     },
     address: {
