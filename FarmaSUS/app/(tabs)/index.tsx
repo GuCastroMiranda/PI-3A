@@ -19,6 +19,8 @@ type Remedio = {
 
 export default function HomeScreen() {
 
+  const [busca, setBusca] = useState('');
+
     const [remedios] = useState<Remedio[]>([
         {
             id: '1',
@@ -58,7 +60,7 @@ export default function HomeScreen() {
     ]);
 
     const resultados = remedios.filter((item) =>
-      item.title.toLowerCase()
+      item.title.toLowerCase().includes(busca.toLowerCase())
     );
 
   return (
@@ -88,11 +90,12 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container:{
+    flex: 1,
     backgroundColor: "#D3E4FE",
   },
   containertitle:{
     margin: 10,
-    paddingTop: 63
+    paddingTop: 63,
   },
   title:{
     fontSize: 30,

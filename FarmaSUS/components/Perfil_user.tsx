@@ -19,6 +19,7 @@ export const CardPerfil = () => {
     let CPF: String = 'exemplo@gmail.com'
     let CEP: String = 'exemplo@gmail.com'
 
+    const [busca, setBusca] = useState('');
 
     const [remedios] = useState<Remedio[]>([
         {
@@ -81,7 +82,7 @@ export const CardPerfil = () => {
 
     
     const resultados = remedios.filter((item) =>
-    item.title.toLowerCase()
+      item.title.toLowerCase().includes(busca.toLowerCase())
     );
 
     return(
