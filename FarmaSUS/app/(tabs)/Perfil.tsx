@@ -1,170 +1,120 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import { useState } from 'react';
-import Feather from '@expo/vector-icons/Feather';
-import  Card  from '@/components/Card'
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput, Platform, StatusBar, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAuth } from '../../contexts/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 
-type Remedio = {
-  id: string;
-  title: string;
-  nameFarmacia: string;
-  status: boolean;
-  endereco: string;
-};
+export default function Perfil() {
+  const { user, logout, updateUser } = useAuth();
+  const router = useRouter();
 
-export default function Perfil(){
-    let name: String = 'Guilherme Duarte'
-    let email: String = 'exemplo@gmail.com'
-    let Celular: String = '9999999999'
-    let CPF: String = 'exemplo@gmail.com'
-    let CEP: String = 'exemplo@gmail.com'
+  const [nome, setNome] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [endereco, setEndereco] = useState('');
 
-    const [busca, setBusca] = useState('');
+  useEffect(() => {
+    if (user) {
+      setNome(user.name || '');
+      setCpf(user.cpf || '');
+      setEmail(user.email || '');
+      setTelefone(user.phone || '');
+      setEndereco(user.address || '');
+    }
+  }, [user]);
 
-    const [remedios] = useState<Remedio[]>([
-        {
-            id: '1',
-            title: 'Paracetamol',
-            nameFarmacia: 'Farmácia Central',
-            status: false,
-            endereco: 'EQS 415/416',
-        },
-        {
-            id: '2',
-            title:'Paracetamol - 750mg',
-            nameFarmacia:'Rosaria',
-            status: true,
-            endereco:'EQS 410/411' 
-        },
-        {
-            id: '3',
-            title:'Dipirona - 1g',
-            nameFarmacia:'farma ++',
-            status: true,
-            endereco:'EQS 210/211' 
-        },
-        {  
-            id: '4',
-            title:'Loratadina - 10g',
-            nameFarmacia:'farma ++',
-            status: false,
-            endereco:'EQS 210/211' 
-        },
-        {
-            id: '5',
-            title:'Budesonida - 8,5ml',
-            nameFarmacia:'Rosaria',
-            status: true,
-            endereco:'EQS 210/211' 
-        },
-        {
-            id: '6',
-            title: 'Paracetamol - 750gm',
-            nameFarmacia: 'Farmácia Central',
-            status: true,
-            endereco: 'EQS 415/416',
-        },
-        {
-            id: '7',
-            title: 'Ibuprofeno - 400gm',
-            nameFarmacia: 'Drogasil',
-            status: true,
-            endereco: 'Asa Sul',
-        },
-        {
-            id: '8',
-            title: 'Dipirona - 500gm',
-            nameFarmacia: 'Pague Menos',
-            status: true,
-            endereco: 'Asa Norte',
-        },
-    ]);
+  const handleSalvar = () => {
+    updateUser({
+      name: nome,
+      email: email,
+      phone: telefone,
+      address: endereco
+    });
+    Alert.alert("Sucesso", "Suas informações foram atualizadas!");
+  };
 
-    
-    const resultados = remedios.filter((item) =>
-      item.title.toLowerCase().includes(busca.toLowerCase())
-    );
-
-    return(
-        <View style={styles.container_Card}>
-            <View style={styles.container_Perfil}>
-                <View style={styles.img_User}>
-                    <Feather name="user" size={100} color="black" />
-                </View>
-                <View>
-                    <Text style={styles.titulo}>{name}</Text>
-                    <View style={styles.user}>
-                        <Text style={styles.subtitle}>Email: {email}</Text>
-                        <Text style={styles.subtitle}>Celular: 99 9999-9999</Text>
-                        <Text style={styles.subtitle}>CPF: 000.000.000-00</Text>
-                        <Text style={styles.subtitle}>CEP: 00.000-000</Text>
-                    </View>
-                </View>
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        
+        <View style={styles.profileHeader}>
+          <View style={styles.avatarCircle}>
+            <Ionicons name="person" size={50} color="#7A9CBB" />
+          </View>
+          <View style={styles.profileInfoText}>
+            {/* O nome aqui em cima também atualiza automaticamente */}
+            <Text style={styles.name}>{user?.name || 'Guilherme'}</Text>
+            <View style={styles.locationContainer}>
+              <Ionicons name="location-outline" size={14} color="#1A3C6B" />
+              <Text style={styles.locationText}>Brasília, DF</Text>
             </View>
-            <View> 
-                <View>
-                    <Text style={styles.title_historico}> Historico de compras</Text>
-                </View>
-                <FlatList
-                    data={resultados}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                    <Card
-                        title={item.title}
-                        nameFarmacia={item.nameFarmacia}
-                        status={item.status}
-                        endereco={item.endereco}
-                    />
-                    )}
-                />
-            </View>
+          </View>
         </View>
-    )
+
+        <Text style={styles.sectionTitle}>Informações de Perfil</Text>
+        
+        <View style={styles.formGroup}>
+          {/* Trocamos 'value' por 'placeholder' para os textos sumirem quando você digitar, e conectamos as variáveis */}
+          <TextInput style={styles.input} placeholder="Nome Completo" placeholderTextColor="#888" value={nome} onChangeText={setNome} />
+          
+          <TextInput style={[styles.input, styles.inputDisabled]} placeholder="CPF/CNPJ (apenas leitura)" placeholderTextColor="#888" value={cpf} editable={false} />
+          
+          <TextInput style={styles.input} placeholder="E-mail" placeholderTextColor="#888" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+          
+          <TextInput style={styles.input} placeholder="Telefone" placeholderTextColor="#888" value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" />
+          
+          <TextInput style={styles.input} placeholder="Endereço Completo" placeholderTextColor="#888" value={endereco} onChangeText={setEndereco} />
+        </View>
+
+        <Text style={styles.sectionTitle}>Segurança</Text>
+        <TouchableOpacity style={styles.linkButton}>
+          <Text style={styles.linkText}>Alterar Senha</Text>
+        </TouchableOpacity>
+
+        {user?.type === 'farmacia' && (
+          <>
+            <Text style={styles.sectionTitle}>Gerenciamento da Farmácia</Text>
+            {/* Adicionamos a navegação aqui */}
+            <TouchableOpacity style={styles.manageButton} onPress={() => router.push('/gerenciar')}>
+              <Text style={styles.manageButtonText}>Gerenciar Estoque e Medicamentos</Text>
+            </TouchableOpacity>
+          </>
+        )}
+
+        {/* Adicionamos a função de salvar aqui */}
+        <TouchableOpacity style={styles.saveButton} onPress={handleSalvar}>
+          <Text style={styles.saveButtonText}>Salvar Alterações</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <Text style={styles.logoutButtonText}>Sair</Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container_Card:{
-        backgroundColor: "#D3E4FE",
-        flex: 1
-    },
-    container_Perfil:{
-        flexDirection: 'row',
-        marginTop: 50,
-        alignItems: 'center',
-    },
-    img_User:{
-        borderRadius: 100,
-        borderWidth: 5,
-        width: '30%',
-        alignItems: 'center',
-        backgroundColor: '#ffff',
-        marginLeft: 10,
-        marginRight: 10,
-        padding: 4
-    },
-    user:{
-        backgroundColor: '#ffff',
-        padding: 5,
-        borderRadius: 6,
-        elevation: 3,
-        borderWidth: 1,
-        borderColor: '#E1E8F0',
-    },
-    titulo:{
-        fontSize: 30,
-        color: '#174680',
-        fontWeight: 'bold',
-        marginBottom: 10,
-        textDecorationLine: 'underline',
-    },
-    subtitle:{
-        fontSize: 15,
-        color: 'black',
-        marginBottom: 5
-    },
-    title_historico:{
-        fontSize: 25,
-        color: 'black',
-        fontWeight: 'bold',
-        margin: 10,
-    },
+  safeArea: { flex: 1, backgroundColor: '#E6F0FA', paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  container: { padding: 25, paddingBottom: 40 },
+  profileHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 },
+  avatarCircle: { width: 90, height: 90, borderRadius: 45, backgroundColor: '#D9E8F5', justifyContent: 'center', alignItems: 'center', marginRight: 20 },
+  profileInfoText: { justifyContent: 'center' },
+  name: { fontSize: 24, fontWeight: 'bold', color: '#1A3C6B', marginBottom: 5 },
+  locationContainer: { flexDirection: 'row', alignItems: 'center' },
+  locationText: { fontSize: 14, color: '#1A3C6B', marginLeft: 4 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#000', marginBottom: 15, marginTop: 10 },
+  formGroup: { marginBottom: 10 },
+  input: { backgroundColor: '#F0F4F8', borderRadius: 20, padding: 15, marginBottom: 15, fontSize: 15, color: '#555', borderWidth: 1, borderColor: '#D9E2EC' },
+  inputDisabled: { backgroundColor: '#E8ECF1', color: '#888' },
+  linkButton: { marginBottom: 20 },
+  linkText: { color: '#1A3C6B', fontSize: 15, textDecorationLine: 'underline', fontWeight: '500' },
+  manageButton: { backgroundColor: '#2F8F8F', borderRadius: 25, padding: 18, alignItems: 'center', marginBottom: 25, shadowColor: '#2F8F8F', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.3, shadowRadius: 5, elevation: 4 },
+  manageButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
+  saveButton: { backgroundColor: '#1A3C6B', borderRadius: 25, padding: 18, alignItems: 'center', marginTop: 10, shadowColor: '#1A3C6B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 },
+  saveButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
+  logoutButton: { marginTop: 20, alignItems: 'center', padding: 10 },
+  logoutButtonText: { color: '#D32F2F', fontSize: 16, fontWeight: 'bold' },
 });
