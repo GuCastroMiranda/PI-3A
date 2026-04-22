@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, FlatList, TextInput } from 'react-native';
 
 import  Card  from '@/components/Card';
 import { Input } from '@/components/ui/Input';
@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useState } from 'react';
 
-import Login from '@/app/(auth)/login'
+import { Link } from 'expo-router';
 
 type Remedio = {
   id: string;
@@ -59,6 +59,8 @@ export default function HomeScreen() {
         }
     ]);
 
+    const textInput = 'Buscar remédio...'
+
     const resultados = remedios.filter((item) =>
       item.title.toLowerCase().includes(busca.toLowerCase())
     );
@@ -67,10 +69,16 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.containertitle}>
         <Text style={styles.title}>Olá, Guilherme!</Text>
-        <Text style={styles.subTitle}>Brasília, DF</Text>
+        <Text>Brasília, DF</Text>
       </View>
-
-      <Input></Input>
+      <View style={styles.container_input}>
+          <TextInput
+              placeholder="Buscar remédio..."
+              value={busca}
+              onChangeText={setBusca}
+              style={styles.input}
+          />
+      </View>
       <FlatList
           data={resultados}
           keyExtractor={(item) => item.id}
@@ -102,7 +110,21 @@ const styles = StyleSheet.create({
     color: '#174680',
     fontWeight: 'bold'
   },
-  subTitle:{
-
+  containe:{
+    backgroundColor: "#D3E4FE",
+    flex: 1,
+    padding: 10,
+  },
+  container_input:{
+      marginTop: 20,
+  },
+  input:{
+      height: 60,
+      borderColor: 'gray',
+      borderWidth: 1,
+      paddingHorizontal: 10,
+      backgroundColor: '#ffff',
+      borderRadius: 12,
+      margin: 10,
   }
 })

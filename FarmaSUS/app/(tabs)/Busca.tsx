@@ -72,6 +72,7 @@ export default function SearchScreen() {
 }
   ]);
 
+  const textInput = 'Buscar remédio...'
 
   const resultados = remedios.filter((item) =>
     item.title.toLowerCase().includes(busca.toLowerCase())
