@@ -3,11 +3,14 @@ import { View, Text, TextInput, FlatList, StyleSheet, SafeAreaView, Platform, St
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 import { Ionicons } from '@expo/vector-icons';
+import MedicationDetailModal from '@/components/ui/MedicationDetailModal';
 
 export default function Favoritos() {
   const { favorites, toggleFavorite, token } = useAuth();
   const [search, setSearch] = useState('');
   const [medications, setMedications] = useState<any[]>([]);
+  const [selectedMedication, setSelectedMedication] = useState<any | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     async function loadMedications() {
@@ -20,13 +23,23 @@ export default function Favoritos() {
     }
     loadMedications();
   }, [token]);
-  
+
   // Filtra apenas os medicamentos que estão na lista de IDs de favoritos
   const favoritosBase = medications.filter(med => favorites.includes(med.id));
 
   const filteredFavoritos = favoritosBase.filter(med =>
     med.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleOpenModal = (medication: any) => {
+    setSelectedMedication(medication);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setSelectedMedication(null);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -57,7 +70,11 @@ export default function Favoritos() {
             const address = firstPharmacy ? firstPharmacy.address : '-';
 
             return (
-              <View style={styles.card}>
+              <TouchableOpacity 
+                style={styles.card}
+                onPress={() => handleOpenModal(item)}
+                activeOpacity={0.7}
+              >
                 <View style={styles.cardHeader}>
                   <Text style={styles.medName}>{item.name}</Text>
                   <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
@@ -72,7 +89,7 @@ export default function Favoritos() {
                   </Text>
                 </View>
                 <Text style={styles.address}>Endereço: {address}</Text>
-              </View>
+              </TouchableOpacity>
             );
           }}
           ListEmptyComponent={
@@ -83,14 +100,33 @@ export default function Favoritos() {
           }
         />
       </View>
+
+      <MedicationDetailModal 
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        medication={selectedMedication}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#E6F0FA', paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
-  container: { flex: 1, paddingHorizontal: 20 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#1A3C6B', marginTop: 20, marginBottom: 20 },
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: '#E6F0FA', 
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+  },
+  container: { 
+    flex: 1, 
+    paddingHorizontal: 20 
+  },
+  title: { 
+    fontSize: 28, 
+    fontWeight: 'bold', 
+    color: '#1A3C6B', 
+    marginTop: 20, 
+    marginBottom: 20 
+  },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', borderRadius: 15, paddingHorizontal: 15, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
   searchIcon: { marginRight: 10 },
   searchInput: { flex: 1, paddingVertical: 15, fontSize: 16, color: '#333' },
