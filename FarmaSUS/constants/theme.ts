@@ -1,21 +1,24 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const tintColorLight = '#1A3C6B'; // Azul escuro principal da logo e botões
+const tintColorDark = '#6A8FB8';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: '#333333',
+    background: '#E6F0FA', // Azul bem clarinho do fundo das telas
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    icon: '#6A8FB8',
+    tabIconDefault: '#A0B4C8', // Cor dos ícones inativos no menu inferior
+    tabIconSelected: tintColorLight, // Cor do ícone ativo no menu inferior
+    
+    // Cores adicionais do FarmaSUS para facilitar
+    primary: '#1A3C6B', // Azul Principal
+    secondary: '#2F8F8F', // Verde Água (usado no botão Finalizar Cadastro)
+    success: '#00B36B', // Verde de "Em Estoque"
+    danger: '#D32F2F', // Vermelho de "Sem Estoque"
+    card: '#FFFFFF', // Fundo branco dos cards e inputs
+    border: '#D9E2EC', // Bordas dos inputs
   },
   dark: {
     text: '#ECEDEE',
@@ -24,18 +27,21 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    
+    primary: '#6A8FB8',
+    secondary: '#2F8F8F',
+    success: '#00B36B',
+    danger: '#D32F2F',
+    card: '#222222',
+    border: '#333333',
   },
 };
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {

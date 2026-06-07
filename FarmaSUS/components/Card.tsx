@@ -1,37 +1,30 @@
-import { Image, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native";
 
-interface PaiProps{
+interface PaiProps {
     title: string;
     nameFarmacia: string;
     status: boolean;
     endereco: string;
 }
 
-export default function Card ({ title, nameFarmacia, status, endereco}: PaiProps) {
-
-    let typeStatus = 'Em estoque';
-    let styleStatus = style.statusInStock;
-
-    if(!status){
-        typeStatus = 'Esgotado'
-        styleStatus = style.statusRed;
-    }   
+export default function Card({ title, nameFarmacia, status, endereco }: PaiProps) {
+    const typeStatus = status ? 'Em estoque' : 'Sem estoque';
+    const styleStatus = status ? style.statusInStock : style.statusRed;
 
     return (
         <View style={style.card}>
-            <View >
-                <Text style={style.title}>{title}</Text>
+            <Text style={style.title}>{title}</Text>
+            <Text style={style.subtitle}>{nameFarmacia}</Text>
 
-                <Text style={style.subtitle}>{nameFarmacia}</Text>
+            <View style={style.infoContainer}>
+                <View style={style.row}>
+                    <Text style={style.label}>Status: </Text>
+                    <Text style={[style.label, styleStatus]}>{typeStatus}</Text>
+                </View>
 
-                <View style={style.infoContainer}>
-                    <Text style={style.label}>
-                        Status: <Text style={ styleStatus }>{ typeStatus }</Text>
-                    </Text>
-
-                    <Text style={style.label}>
-                        Endereço: <Text style={style.address}>{ endereco }</Text>
-                    </Text>
+                <View style={style.row}>
+                    <Text style={style.label}>Endereço: </Text>
+                    <Text style={style.address}>{endereco}</Text>
                 </View>
             </View>
         </View>
@@ -40,54 +33,49 @@ export default function Card ({ title, nameFarmacia, status, endereco}: PaiProps
 
 const style = StyleSheet.create({
     card: {
-        backgroundColor: '#ffff',
-        borderRadius: 12,
-        padding: 16,
-        margin:10,
-        flexDirection: 'row',
-
+        backgroundColor: '#FFF',
+        borderRadius: 15,
+        padding: 20,
+        marginBottom: 15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        // Sombra para Android
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
         elevation: 3,
-        borderWidth: 1,
-        borderColor: '#E1E8F0',
-    },
-    cardImg:{
-        height: 120,
-        paddingLeft: 30
     },
     title: {
-        fontSize: 22,
-        fontWeight: '700',
-        color: '#000000',
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#000',
         marginBottom: 4,
     },
     subtitle: {
-        fontSize: 18,
-        color: '#9BA3AF',
-        marginBottom: 16,
+        fontSize: 14,
+        color: '#888',
+        marginBottom: 15,
     },
     infoContainer: {
-        gap: 4, 
+        gap: 2,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 2,
     },
     label: {
-        fontSize: 16,
-        color: '#1A1A1A',
-        fontWeight: '500',
+        fontSize: 13,
+        color: '#555',
     },
     statusInStock: {
-        color: '#32D74B',
-        fontWeight: '400',
+        color: '#00B36B',
+        fontWeight: 'bold',
     },
-    statusRed:{
-        color: '#ff0000',
-        fontWeight: '400',
+    statusRed: {
+        color: '#D32F2F',
+        fontWeight: 'bold',
     },
     address: {
-        color: '#1A1A1A',
-        fontWeight: '400',
-  },
+        fontSize: 13,
+        color: '#555',
+    },
 });
