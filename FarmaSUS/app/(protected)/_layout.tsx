@@ -1,4 +1,4 @@
-import { Menu } from "@/components/Menu";
+import { Menu } from "@/components/ui/Menu";
 import { Redirect, Slot } from "expo-router";
 import { View } from "react-native";
 

@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-export const Input = () => {
+interface textInput {
+    title: string;
+}
+
+export const Input = ({ title }: textInput) => {
     const [text, setText] = useState('');
     
     return(
         <View style={style.container}>
             <TextInput
                 style={style.input}
-                placeholder="Buscar"
+                placeholder={title}
                 onChangeText={newText => setText(newText)}
                 defaultValue={text}
             />
@@ -18,18 +22,20 @@ export const Input = () => {
 
 const style = StyleSheet.create({
     container: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        marginBottom: 35,
-        marginTop: 21
     },
     input: {
-        height: 40,
+        height: 50,
         borderColor: 'gray',
-        borderWidth: 1,
+
         paddingHorizontal: 10,
         backgroundColor: '#ffff',
         borderRadius: 12,
-        margin: 10
+        marginHorizontal: 30,
+        marginVertical: 10,
+
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 10.84,
     }
 })
