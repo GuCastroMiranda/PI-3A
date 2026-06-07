@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CITIZEN
+  ADMIN
+}
+
+model User {
+  id            String     @id @default(uuid())
+  name          String
+  email         String     @unique
+  password_hash String
+  role          Role       @default(CITIZEN)
+  created_at    DateTime   @default(now())
+
+  favorites     Favorite[]
+}
+
+model Pharmacy {
+  id          String      @id @default(uuid())
+  name        String
+  address     String
+  latitude    Float?
+  longitude   Float?
+
+  inventories Inventory[]
+}
+
+model Medication {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  category    String?
+
+  inventories Inventory[]
+  favorites   Favorite[]
+}
+
+model Inventory {
+  id            String   @id @default(uuid())
+  pharmacy_id   String
+  medication_id String
+  quantity      Int      @default(0)
+  updated_at    DateTime @updatedAt
+
+  pharmacy   Pharmacy   @relation(fields: [pharmacy_id], references: [id], onDelete: Cascade)
+  medication Medication @relation(fields: [medication_id], references: [id], onDelete: Cascade)
+
+  @@unique([pharmacy_id, medication_id])
+}
+
+model Favorite {
+  id            String   @id @default(uuid())
+  user_id       String
+  medication_id String
+  created_at    DateTime @default(now())
+
+  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  medication Medication @relation(fields: [medication_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, medication_id])
+}

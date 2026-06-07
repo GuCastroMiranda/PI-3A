@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
+import { api } from '../../services/api';
 
 export default function Login() {
   const [name, setName] = useState('');
@@ -9,17 +10,22 @@ export default function Login() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleLogin = () => {
-    if (name.trim() !== '') {
-      // Enviando dados simulados para preencher o Perfil após o login
-      login({
-        name: "Usuário Logado", 
-        type: 'consumidor',
-        cpf: name, 
-        email: "email@simulado.com",
-        phone: "(00) 00000-0000",
-        address: "Endereço cadastrado no sistema"
-      } as any);
+  const handleLogin = async () => {
+    if (name.trim() !== '' && password.trim() !== '') {
+      try {
+        const response = await api.post('/auth/login', {
+          email: name, // Aqui usamos 'name' mas é o email no backend
+          password: password,
+        });
+
+        // Backend retorna: { token, user: { id, name, role } }
+        login(response.data.user, response.data.token);
+      } catch (error) {
+        alert('Credenciais inválidas. Tente novamente.');
+        console.error('Erro no login:', error);
+      }
+    } else {
+      alert('Preencha os campos corretamente.');
     }
   };
 

@@ -18,24 +18,26 @@ function RootLayoutNav() {
   useEffect(() => {
     if (!navigationState?.key) return;
 
+    // Apenas aguarda o tempo do Splash Screen uma única vez
+    if (!isReady) {
+      const timer = setTimeout(() => {
+        setIsReady(true);
+        SplashScreen.hideAsync();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+
+    // Depois que estiver pronto, verifica a rota correta
     const inAuthGroup = segments[0] === '(auth)';
 
-    // 2. Coloquei um temporizador de 1.5 segundos simulando o "carregamento" do app.
-    // No futuro, se você for buscar dados do banco de dados, é aqui que o app espera!
-    setTimeout(() => {
-      if (!user && !inAuthGroup) {
-        router.replace('/(auth)/login');
-      } else if (user && inAuthGroup) {
-        router.replace('/(tabs)');
-      }
+    if (!user && !inAuthGroup) {
+      router.replace('/(auth)/login');
+    } else if (user && inAuthGroup) {
+      // Se tiver logado mas estiver na tela de auth, manda pro tabs
+      router.replace('/(tabs)');
+    }
 
-      // 3. Após direcionar o usuário para a tela certa, nós liberamos a tela de logo
-      setIsReady(true);
-      SplashScreen.hideAsync();
-      
-    }, 1500); // 1500 = 1,5 segundos. Pode aumentar ou diminuir como preferir.
-
-  }, [user, segments, navigationState?.key]);
+  }, [user, segments, navigationState?.key, isReady]);
 
   if (!navigationState?.key || !isReady) {
     return null;

@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, StyleSheet, SafeAreaView, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
-import { medicationsMock } from '../../data/mock';
+import { api } from '../../services/api';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Favoritos() {
-  const { favorites, toggleFavorite } = useAuth();
+  const { favorites, toggleFavorite, token } = useAuth();
   const [search, setSearch] = useState('');
+  const [medications, setMedications] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadMedications() {
+      try {
+        const response = await api.get('/medications');
+        setMedications(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar medicamentos nos favoritos:', error);
+      }
+    }
+    loadMedications();
+  }, [token]);
   
-  const favoritosBase = medicationsMock.filter(med => favorites.includes(med.id));
+  // Filtra apenas os medicamentos que estão na lista de IDs de favoritos
+  const favoritosBase = medications.filter(med => favorites.includes(med.id));
 
   const filteredFavoritos = favoritosBase.filter(med =>
     med.name.toLowerCase().includes(search.toLowerCase())
@@ -35,24 +49,32 @@ export default function Favoritos() {
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.medName}>{item.name}</Text>
-                <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
-                  <Ionicons name="heart" size={28} color="#D32F2F" />
-                </TouchableOpacity>
+          renderItem={({ item }) => {
+            const totalStock = item.inventories ? item.inventories.reduce((acc: number, curr: any) => acc + curr.quantity, 0) : 0;
+            const inStock = totalStock > 0;
+            const firstPharmacy = item.inventories && item.inventories.length > 0 ? item.inventories[0].pharmacy : null;
+            const pharmacyName = firstPharmacy ? firstPharmacy.name : 'Nenhuma unidade com estoque';
+            const address = firstPharmacy ? firstPharmacy.address : '-';
+
+            return (
+              <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.medName}>{item.name}</Text>
+                  <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
+                    <Ionicons name="heart" size={28} color="#D32F2F" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.medPharmacy}>{pharmacyName}</Text>
+                <View style={styles.statusRow}>
+                  <Text style={styles.statusLabel}>Status: </Text>
+                  <Text style={[styles.statusText, { color: inStock ? '#00B36B' : '#D32F2F' }]}>
+                    {inStock ? `Em estoque (${totalStock} un.)` : 'Sem estoque'}
+                  </Text>
+                </View>
+                <Text style={styles.address}>Endereço: {address}</Text>
               </View>
-              <Text style={styles.medPharmacy}>{item.pharmacy}</Text>
-              <View style={styles.statusRow}>
-                <Text style={styles.statusLabel}>Status: </Text>
-                <Text style={[styles.statusText, { color: item.inStock ? '#00B36B' : '#D32F2F' }]}>
-                  {item.inStock ? 'Em estoque' : 'Sem estoque'}
-                </Text>
-              </View>
-              <Text style={styles.address}>Endereço: EQS 415/416</Text>
-            </View>
-          )}
+            );
+          }}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Ionicons name="heart-dislike-outline" size={60} color="#A0B4C8" />

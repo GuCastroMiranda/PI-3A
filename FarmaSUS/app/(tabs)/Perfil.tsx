@@ -17,10 +17,7 @@ export default function Perfil() {
   useEffect(() => {
     if (user) {
       setNome(user.name || '');
-      setCpf(user.cpf || '');
       setEmail(user.email || '');
-      setTelefone(user.phone || '');
-      setEndereco(user.address || '');
     }
   }, [user]);
 
@@ -28,8 +25,6 @@ export default function Perfil() {
     updateUser({
       name: nome,
       email: email,
-      phone: telefone,
-      address: endereco
     });
     Alert.alert("Sucesso", "Suas informações foram atualizadas!");
   };
@@ -55,16 +50,9 @@ export default function Perfil() {
         <Text style={styles.sectionTitle}>Informações de Perfil</Text>
         
         <View style={styles.formGroup}>
-          {/* Trocamos 'value' por 'placeholder' para os textos sumirem quando você digitar, e conectamos as variáveis */}
           <TextInput style={styles.input} placeholder="Nome Completo" placeholderTextColor="#888" value={nome} onChangeText={setNome} />
           
-          <TextInput style={[styles.input, styles.inputDisabled]} placeholder="CPF/CNPJ (apenas leitura)" placeholderTextColor="#888" value={cpf} editable={false} />
-          
           <TextInput style={styles.input} placeholder="E-mail" placeholderTextColor="#888" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-          
-          <TextInput style={styles.input} placeholder="Telefone" placeholderTextColor="#888" value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" />
-          
-          <TextInput style={styles.input} placeholder="Endereço Completo" placeholderTextColor="#888" value={endereco} onChangeText={setEndereco} />
         </View>
 
         <Text style={styles.sectionTitle}>Segurança</Text>
@@ -72,7 +60,7 @@ export default function Perfil() {
           <Text style={styles.linkText}>Alterar Senha</Text>
         </TouchableOpacity>
 
-        {user?.type === 'farmacia' && (
+        {user?.role === 'ADMIN' && (
           <>
             <Text style={styles.sectionTitle}>Gerenciamento da Farmácia</Text>
             {/* Adicionamos a navegação aqui */}
