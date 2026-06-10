@@ -22,12 +22,16 @@ export default function Perfil() {
     }
   }, [user]);
 
-  const handleSalvar = () => {
-    updateUser({
-      name: nome,
-      email: email,
-    });
-    Alert.alert("Sucesso", "Suas informações foram atualizadas!");
+  const handleSalvar = async () => {
+    try {
+      await updateUser({
+        name: nome,
+        email: email,
+      });
+      Alert.alert("Sucesso", "Suas informações foram atualizadas!");
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível atualizar suas informações. Tente novamente.");
+    }
   };
 
   return (

@@ -7,6 +7,7 @@ import { medicationRoutes } from './routes/medications'
 import { pharmacyRoutes } from './routes/pharmacies'
 import { favoriteRoutes } from './routes/favorites'
 import { inventoryRoutes } from './routes/inventory'
+import { userRoutes } from './routes/users'
 
 const app = fastify({ logger: true })
 
@@ -24,6 +25,7 @@ app.register(cors, {
 })
 
 app.register(authRoutes, { prefix: '/auth' })
+app.register(userRoutes)
 app.register(medicationRoutes)
 app.register(pharmacyRoutes)
 app.register(favoriteRoutes)

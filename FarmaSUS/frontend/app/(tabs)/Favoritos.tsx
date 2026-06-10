@@ -1,6 +1,7 @@
 import { useFocusEffect } from "expo-router";
 import React, { useState, useCallback } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, SafeAreaView, Platform, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, Platform, StatusBar, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
 import { Ionicons } from '@expo/vector-icons';

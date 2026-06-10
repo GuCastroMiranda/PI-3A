@@ -57,14 +57,19 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post('/login', async (request, reply) => {
     const loginBodySchema = z.object({
-      email: z.string().email(),
+      email: z.string(),
       password: z.string(),
     })
 
     const { email, password } = loginBodySchema.parse(request.body)
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: email },
+          { cpf: email }
+        ]
+      },
       include: { pharmacy: true }
     })
 

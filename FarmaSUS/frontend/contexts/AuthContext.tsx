@@ -19,7 +19,7 @@ interface AuthContextData {
   token: string | null;
   login: (userData: UserData, token: string) => Promise<void>;
   logout: () => void;
-  updateUser: (data: Partial<UserData>) => void;
+  updateUser: (data: Partial<UserData>) => Promise<void>;
   favorites: string[];
   toggleFavorite: (medId: string) => Promise<void>;
 }
@@ -53,9 +53,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setFavorites([]);
   };
 
-  const updateUser = (data: Partial<UserData>) => {
-    if (user) {
-      setUser({ ...user, ...data });
+  const updateUser = async (data: Partial<UserData>) => {
+    if (!token || !user) return;
+    try {
+      const response = await api.put('/profile', data, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser({ ...user, ...response.data });
+    } catch (error) {
+      console.log('Erro ao atualizar usuário:', error);
+      throw error;
     }
   };
 
