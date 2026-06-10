@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const favIds = response.data.map((med: any) => med.id);
       setFavorites(favIds);
     } catch (error) {
-      console.error('Erro ao buscar favoritos:', error);
+      console.log('Erro ao buscar favoritos:', error);
     }
   };
 
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     } catch (error) {
-      console.error('Erro ao favoritar/desfavoritar:', error);
+      console.log('Erro ao favoritar/desfavoritar:', error);
     }
   };
 

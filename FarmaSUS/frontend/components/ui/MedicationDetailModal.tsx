@@ -61,7 +61,7 @@ export default function MedicationDetailModal({
         setAddress(medication?.address || '');
       }
     } catch (error) {
-      console.error('Erro ao buscar CEP:', error);
+      console.log('Erro ao buscar CEP:', error);
       setAddress(medication?.address || '');
     } finally {
       setLoading(false);

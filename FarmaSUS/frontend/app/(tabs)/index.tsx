@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useState, useCallback } from "react";
 import {
   FlatList,
   Platform,
@@ -22,17 +23,19 @@ export default function Home() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [medications, setMedications] = useState<any[]>([]);
 
-  useEffect(() => {
-    async function loadMedications() {
-      try {
-        const response = await api.get('/medications');
-        setMedications(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar medicamentos', error);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadMedications() {
+        try {
+          const response = await api.get('/medications');
+          setMedications(response.data);
+        } catch (error) {
+          console.log('Erro ao buscar medicamentos', error);
+        }
       }
-    }
-    loadMedications();
-  }, []);
+      loadMedications();
+    }, [])
+  );
 
   const filteredMedications = medications.filter((med) =>
     med.name.toLowerCase().includes(search.toLowerCase()),

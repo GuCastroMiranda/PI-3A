@@ -16,28 +16,22 @@ O backend é o coração do sistema, responsável por gerenciar o banco de dados
 - Ter o **Node.js** instalado na máquina.
 - Ter o **PostgreSQL** instalado e rodando (ou através do Docker).
 
-### Passo a passo
+### Passo a passo (Recomendado via Docker)
+
+A forma mais fácil de rodar o backend, sem se preocupar com versões do Node.js ou dependências, é utilizando o Docker.
 
 1. Abra o terminal e navegue até a pasta do backend:
    ```bash
    cd backend
    ```
 
-2. Instale as dependências do projeto:
+2. Inicie os containers (Banco de Dados e API):
    ```bash
-   npm install
+   docker compose up -d --build
    ```
 
-3. **Configuração do Banco de Dados (.env):**
-   - Na pasta `backend`, crie um arquivo chamado `.env` baseado no `.env.example`.
-   - Adicione a URL do seu banco de dados com seu usuário e senha.
-   - Exemplo: `DATABASE_URL="postgresql://postgres:123@localhost:5432/farmasus?schema=public"`
-
-4. **Inicie o Servidor:**
-   ```bash
-   npm run dev
-   ```
-   *O backend estará rodando em `http://localhost:3333`.*
+3. **Pronto!**
+   *O backend estará rodando em `http://localhost:3333` e as tabelas do banco serão criadas automaticamente. Você pode acompanhar os logs com `docker compose logs -f`.*
 
 ---
 
@@ -70,4 +64,4 @@ O frontend foi construído utilizando o Expo. Ele faz requisições (via Axios) 
 5. **Testando:**
    - Pressione **`a`** no terminal para abrir no Emulador Android (caso tenha o Android Studio instalado).
    - Ou escaneie o **QR Code** usando o aplicativo "Expo Go" no seu celular físico (garanta que o celular está no mesmo Wi-Fi do computador).
-   - Faça login com o email `teste@farmasus.com` e a senha `123456`.
+   - Crie uma conta e teste a funcionalidade da aplicação

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from "expo-router";
+import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, FlatList, StyleSheet, SafeAreaView, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
@@ -12,17 +13,19 @@ export default function Favoritos() {
   const [selectedMedication, setSelectedMedication] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    async function loadMedications() {
-      try {
-        const response = await api.get('/medications');
-        setMedications(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar medicamentos nos favoritos:', error);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadMedications() {
+        try {
+          const response = await api.get('/medications');
+          setMedications(response.data);
+        } catch (error) {
+          console.log('Erro ao buscar medicamentos nos favoritos:', error);
+        }
       }
-    }
-    loadMedications();
-  }, [token]);
+      loadMedications();
+    }, [token])
+  );
 
   // Filtra apenas os medicamentos que estão na lista de IDs de favoritos
   const favoritosBase = medications.filter(med => favorites.includes(med.id));

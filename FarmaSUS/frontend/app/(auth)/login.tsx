@@ -1,5 +1,6 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services/api';
@@ -19,11 +20,10 @@ export default function Login() {
         });
         login(response.data.user, response.data.token);
       } catch (error) {
-        alert('Credenciais inválidas. Tente novamente.');
-        console.error('Erro no login:', error);
+        Alert.alert('Erro', 'Email ou senha inválidos. Tente novamente.');
       }
     } else {
-      alert('Preencha os campos corretamente.');
+      Alert.alert('Atenção', 'Preencha os campos corretamente.');
     }
   };
 

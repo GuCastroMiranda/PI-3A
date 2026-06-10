@@ -1,4 +1,3 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -7,6 +6,7 @@ import { CnpjMask } from "@/components/masks/CnpjMask"
 
 import {
   Alert,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -82,7 +82,7 @@ export default function Cadastro() {
         Alert.alert("Erro", "CEP não encontrado.");
       }
     } catch (error) {
-      console.log("Erro ao buscar CEP:", error);
+      console.error("Erro ao buscar CEP:", error);
       Alert.alert("Erro", "Não foi possível buscar o endereço.");
     }
   };
@@ -123,14 +123,9 @@ export default function Cadastro() {
       });
 
       login(response.data.user, response.data.token);
-    } catch (error: any) {
-      if (error.response?.data?.issues) {
-        Alert.alert("Erro de Validação", "A senha precisa ter pelo menos 6 caracteres.");
-      } else if (error.response?.status === 409) {
-        Alert.alert("Erro", "Esse e-mail já está em uso.");
-      } else {
-        Alert.alert("Erro", "Falha ao registrar. Verifique os dados.");
-      }
+    } catch (error) {
+      console.error("Erro no cadastro:", error);
+      Alert.alert("Erro", "Falha ao registrar. Esse e-mail já pode estar em uso.");
     }
   };
 
